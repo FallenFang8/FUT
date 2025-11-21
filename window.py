@@ -80,3 +80,27 @@ class MainWindow:
             tk.Label(frame, text=text, font=font).pack(pady=20)
         else:
             print(f"No page named '{page}' exists.")
+            
+            
+            
+            
+            
+def create_page(app, page_name, page_title=""):
+    """
+    Creates a new page in the app with basic setup:
+    - Adds a frame for the page
+    - Adds a title at the top
+    - Adds a 'Back' button to return to the main page
+    Returns the frame so you can add other widgets.
+    """
+    # Create the page/frame
+    frame = app.create_page(page_name)
+    # Add a title if provided
+    if page_title:
+        app.add_title(page_title, page=page_name)
+    # Add a back button (skip if this is the main page)
+    if page_name != "main":
+        tk.Button(frame, text="Back", font=("Arial", 14),
+                  command=lambda: app.show_page("main")).pack(pady=10)
+
+    return frame
