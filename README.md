@@ -1,6 +1,10 @@
-# Tkinter Button App
+# FUT - Fallen's Utility Toolkit
 
-This project is a simple Tkinter application that allows users to dynamically add buttons with associated actions. It serves as a demonstration of how to create a GUI application using Python's Tkinter library.
+Purpose:
+This project is intended to be a lightweight, extensible utility toolkit built with Python's Tkinter GUI library.
+It presents a simple interface that allows users to add buttons dynamically; each button is bound to a specific utility function.
+Over time the repository will grow to include a collection of small, focused tools (file utilities, text processors, automation helpers, network testers, etc.) that users can enable or disable from the GUI.
+
 
 ## Project Structure
 

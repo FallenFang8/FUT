@@ -12,41 +12,71 @@ class MainWindow:
         self.master = master
         self.master.title("Dynamic Button App")
 
-        # Get the screen dimensions
+        # Fullscreen window
         screen_width = master.winfo_screenwidth()
         screen_height = master.winfo_screenheight()
-
-        # Set the window size to match the screen
         master.geometry(f"{screen_width}x{screen_height}+0+0")
 
-        # Bring window to front and focus
         master.lift()
         master.attributes('-topmost', True)
         master.after_idle(master.attributes, '-topmost', False)
 
-        # Frame for buttons
-        self.buttons_frame = tk.Frame(self.master)
-        self.buttons_frame.pack(pady=20)
-
         self.button_actions = {}
+        self.pages = {}
 
-    def add_button(self, button_name, width=20, height=2, font="Arial", font_size=12):
+        # Create main page
+        self.create_page("main")
+        self.show_page("main")
+
+    def create_page(self, page_name):
+        """Create a new page/frame that fills the window."""
+        frame = tk.Frame(self.master)
+        frame.place(x=0, y=0, relwidth=1, relheight=1)  # make it fill entire window
+        self.pages[page_name] = frame
+        return frame
+
+    def show_page(self, page_name):
+        """Show only the specified page."""
+        frame = self.pages.get(page_name)
+        if frame:
+            frame.tkraise()
+        else:
+            print(f"No page named '{page_name}' exists.")
+
+    def add_button(self, button_name, action=None, page="main", width=20, height=2, font="Arial", font_size=12):
+        """Add a button to a specific page."""
+        frame = self.pages.get(page)
+        if not frame:
+            frame = self.create_page(page)
+
         new_button = tk.Button(
-            self.buttons_frame,
+            frame,
             text=button_name,
-            command=lambda: self.trigger_action(button_name),
-            width=width, # characters wide
-            height=height, # lines tall
-            font=(font, font_size)  # font family and size
+            width=width,
+            height=height,
+            font=(font, font_size),
+            command=lambda: self._handle_button(button_name, action)
         )
         new_button.pack(pady=5)
 
-    def trigger_action(self, button_name):
-        action = self.button_actions.get(button_name)
+    def _handle_button(self, button_name, action):
+        """Trigger button action or navigate to page."""
         if action:
-            action()
+            action(self)  # Pass MainWindow instance to function
         else:
-            print(f"No action assigned for {button_name}")
+            act = self.button_actions.get(button_name)
+            if act:
+                act(self)
+            else:
+                print(f"No action assigned for '{button_name}'")
 
     def assign_action(self, button_name, action):
         self.button_actions[button_name] = action
+            
+    def add_title(self, text, page="main", font=("Arial", 30, "bold")):
+        """Add a title label to a page at the top."""
+        frame = self.pages.get(page)
+        if frame:
+            tk.Label(frame, text=text, font=font).pack(pady=20)
+        else:
+            print(f"No page named '{page}' exists.")
