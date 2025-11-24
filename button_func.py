@@ -54,3 +54,6 @@ def colour_grabber(app):
 
     # Show page
     app.show_page("colour_grabber_page")
+
+def location_logger(app):
+    frame = win.create_page(app, "location_logger_page", "Press + to log location")
