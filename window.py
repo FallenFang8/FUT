@@ -107,8 +107,10 @@ def create_page(app, page_name, page_title=""):
         app.add_title(page_title, page=page_name)
     # Add a back button (skip if this is the main page)
     if page_name != "main":
-        tk.Button(frame, text="Back", font=("Arial", 14),
-                  command=lambda: app.show_page("main")).pack(pady=10)
+        back_btn = tk.Button(frame, text="Back", font=("Arial", 14),
+                     command=lambda: app.show_page("main"))
+        back_btn.place(relx=0.5, rely=1.0, anchor="s", y=-30)
+
 
     return frame
 

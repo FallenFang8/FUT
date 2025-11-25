@@ -129,3 +129,28 @@ def keytyper(app):
     
 def exit_app(app):
     app.master.destroy()
+
+
+############################################################################
+#                                                                          #
+#                                  Config                                  #
+#                                                                          #            
+############################################################################
+def edit_config(app):
+    frame = win.create_page(app, "edit_config_page", "Edit Configuration")
+    app.add_button("Hotkeys", action=hotkey_page, page="edit_config_page", width=20, height=2, font_size=20)
+    
+    
+    app.show_page("edit_config_page")
+
+def hotkey_page(app):
+    # Create the page/frame
+    frame = app.create_page("hotkey_config_page")
+    # Add a title if provided
+    app.add_title("Edit Hotkeys", page="hotkey_config_page")
+
+    back_btn = tk.Button(frame, text="Back", font=("Arial", 14),
+                     command=lambda: app.show_page("edit_config_page"))
+    back_btn.place(relx=0.5, rely=1.0, anchor="s", y=-30)
+
+    app.show_page("hotkey_config_page")
