@@ -126,3 +126,6 @@ def keytyper(app):
 
     # Show page
     app.show_page("keytyper_page")
+    
+def exit_app(app):
+    app.master.destroy()

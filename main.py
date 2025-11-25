@@ -19,8 +19,6 @@ app.add_button("Location Logger", action=func.location_logger, width=20, height=
 app.add_button("Autoclicker", action=func.autoclicker, width=20, height=2, font_size=20)
 app.add_button("Keytyper", action=func.keytyper, width=20, height=2, font_size=20)
 
-
-
-#make exit button
+app.add_button("Exit", action=func.exit_app, width=5, height=1, font_size=20)
 
 root.mainloop()
