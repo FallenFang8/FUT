@@ -85,36 +85,36 @@ def location_logger(app):
     
     
     
-# def autoclicker(app):
-#     frame = win.create_page(app, "autoclicker_page", "Press + to start/stop autoclicker")
+def autoclicker(app):
+    frame = win.create_page(app, "autoclicker_page", "Press + to start/stop autoclicker")
     
-#     clicking = False
+    clicking = False
 
-#     def toggle_clicking(e=None):
-#         nonlocal clicking
-#         clicking = not clicking
-#         if clicking:
-#             print("Autoclicker started.")
-#             run_autoclicker()
-#         else:
-#             print("Autoclicker stopped.")
+    def toggle_clicking(e=None):
+        nonlocal clicking
+        clicking = not clicking
+        if clicking:
+            print("Autoclicker started.")
+            run_autoclicker()
+        else:
+            print("Autoclicker stopped.")
 
-#     def run_autoclicker():
-#         if clicking:
-#             pag.click()
-#             frame.after(10, run_autoclicker)  # Click every 10 ms
+    def run_autoclicker():
+        if clicking:
+            pag.click()
+            frame.after(10, run_autoclicker)  # Click every 10 ms
 
-#     # Bind the F6 key when this page is shown
-#     def on_show_page(event):
-#         frame.focus_set()  # Ensure frame has focus
-#         frame.bind("<+>", toggle_clicking)
+    # Register a global hotkey that logs cursor position
+    hotkey_id = keyboard.add_hotkey('+', toggle_clicking)
 
-#     def on_hide_page(event):
-#         frame.unbind("<+>")  # Clean up binding when leaving page
+    def disable_hotkey():
+        keyboard.remove_hotkey(hotkey_id)
 
-#     # Bind showing and hiding events
-#     frame.bind("<Map>", on_show_page)     # Called when frame is mapped (shown)
-#     frame.bind("<Unmap>", on_hide_page)   # Called when frame is unmapped (hidden)
+    # Disable hotkey when switching page
+    app.on_page_change(disable_hotkey)
 
-#     # Show page
-#     app.show_page("autoclicker_page")
+    # Show page
+    app.show_page("autoclicker_page")
+    
+# def keytyper(app):
+#     print("Hello world!")
