@@ -5,6 +5,7 @@ import time
 import keyboard
 import pyautogui as pag
 import button_func as func
+import pyperclip
 
 
 class MainWindow:

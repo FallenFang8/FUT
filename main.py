@@ -6,6 +6,7 @@ import keyboard
 import pyautogui as pag
 import button_func as func
 import window as win
+import pyperclip
 
 root = tk.Tk()
 app = win.MainWindow(root)
