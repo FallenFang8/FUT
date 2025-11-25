@@ -7,14 +7,6 @@ import pyautogui as pag
 import window as win
 import pyperclip
 
-def say_hello(app):
-    frame = win.create_page(app, "hello_page", "Hello!")
-    # Add widgets
-    tk.Label(frame, text="Welcome to the Hello Page!", font=("Arial", 20)).pack(pady=10)
-    tk.Entry(frame).pack(pady=10)
-    # Show the page
-    app.show_page("hello_page")
-
 
 def colour_grabber(app):
     # Creates the frame
@@ -38,18 +30,17 @@ def colour_grabber(app):
         except Exception as err:
             color_label.config(text=f"Error: {err}")
 
-    # Bind the '+' key when this page is shown
-    def on_show_page(event):
-        frame.focus_set()  # Ensure frame has focus
-        frame.bind("+", grab_color)
+    # Start listening for the '+' key globally
+    keyboard.add_hotkey('+', grab_color)
 
-    def on_hide_page(event):
-        frame.unbind("+")  # Clean up binding when leaving page
-        
+    # Store the hotkey id so we can remove it later
+    hotkey_id = keyboard.add_hotkey('+', grab_color)
 
-    # Bind showing and hiding events
-    frame.bind("<Map>", on_show_page)     # Called when frame is mapped (shown)
-    frame.bind("<Unmap>", on_hide_page)   # Called when frame is unmapped (hidden)
+    def disable_hotkey():
+        keyboard.remove_hotkey(hotkey_id)
+
+    # Remove hotkey when switching page
+    app.on_page_change(disable_hotkey)
 
     # Show page
     app.show_page("colour_grabber_page")
@@ -66,6 +57,8 @@ def location_logger(app):
     coords_label = tk.Label(frame, text=f"coords: {coords}", font=("Arial", 16))
     coords_label.pack(pady=10)
     
+    copy_button = tk.Button(frame, text="Copy to clipboard", command=copy_coords)
+    copy_button.pack(pady=10)
 
     
     def log_location(e=None):
@@ -76,19 +69,52 @@ def location_logger(app):
         print(f"coords: {x, y}")
         coords_label.config(text=f"coords: {coords}")
     
-    # Bind the '+' key when this page is shown
-    def on_show_page(event):
-        frame.focus_set()  # Ensure frame has focus
-        frame.bind("+", log_location)
-        tk.Button(frame, text="Copy to clipboard", command=copy_coords).pack(pady=10)
+    # Register a global hotkey that logs cursor position
+    hotkey_id = keyboard.add_hotkey('+', log_location)
 
-    def on_hide_page(event):
-        frame.unbind("+")  # Clean up binding when leaving page
-        
-    # Bind showing and hiding events
-    frame.bind("<Map>", on_show_page)  # Called when the frame is shown
-    frame.bind("<Unmap>", on_hide_page)
+    def disable_hotkey():
+        keyboard.remove_hotkey(hotkey_id)
+
+    # Disable hotkey when switching page
+    app.on_page_change(disable_hotkey)
         
         
     #show page
     app.show_page("location_logger_page")    
+    
+    
+    
+    
+# def autoclicker(app):
+#     frame = win.create_page(app, "autoclicker_page", "Press + to start/stop autoclicker")
+    
+#     clicking = False
+
+#     def toggle_clicking(e=None):
+#         nonlocal clicking
+#         clicking = not clicking
+#         if clicking:
+#             print("Autoclicker started.")
+#             run_autoclicker()
+#         else:
+#             print("Autoclicker stopped.")
+
+#     def run_autoclicker():
+#         if clicking:
+#             pag.click()
+#             frame.after(10, run_autoclicker)  # Click every 10 ms
+
+#     # Bind the F6 key when this page is shown
+#     def on_show_page(event):
+#         frame.focus_set()  # Ensure frame has focus
+#         frame.bind("<+>", toggle_clicking)
+
+#     def on_hide_page(event):
+#         frame.unbind("<+>")  # Clean up binding when leaving page
+
+#     # Bind showing and hiding events
+#     frame.bind("<Map>", on_show_page)     # Called when frame is mapped (shown)
+#     frame.bind("<Unmap>", on_hide_page)   # Called when frame is unmapped (hidden)
+
+#     # Show page
+#     app.show_page("autoclicker_page")
