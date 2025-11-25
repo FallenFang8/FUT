@@ -32,15 +32,8 @@ def colour_grabber(app):
 
     # Start listening for the '+' key globally
     keyboard.add_hotkey('+', grab_color)
-
-    # Store the hotkey id so we can remove it later
-    hotkey_id = keyboard.add_hotkey('+', grab_color)
-
-    def disable_hotkey():
-        keyboard.remove_hotkey(hotkey_id)
-
-    # Remove hotkey when switching page
-    app.on_page_change(disable_hotkey)
+    
+    win.hotkey_func(app, win.get_setting("hotkeys.colour_grabber"), "Colour Grabber", grab_color)
 
     # Show page
     app.show_page("colour_grabber_page")
@@ -69,14 +62,8 @@ def location_logger(app):
         print(f"coords: {x, y}")
         coords_label.config(text=f"coords: {coords}")
     
-    # Register a global hotkey that logs cursor position
-    hotkey_id = keyboard.add_hotkey('+', log_location)
-
-    def disable_hotkey():
-        keyboard.remove_hotkey(hotkey_id)
-
-    # Disable hotkey when switching page
-    app.on_page_change(disable_hotkey)
+    
+    win.hotkey_func(app, win.get_setting("hotkeys.location_logger"), "Location Logger", log_location)
         
         
     #show page
@@ -104,17 +91,38 @@ def autoclicker(app):
             pag.click()
             frame.after(10, run_autoclicker)  # Click every 10 ms
 
-    # Register a global hotkey that logs cursor position
-    hotkey_id = keyboard.add_hotkey('+', toggle_clicking)
-
-    def disable_hotkey():
-        keyboard.remove_hotkey(hotkey_id)
-
-    # Disable hotkey when switching page
-    app.on_page_change(disable_hotkey)
-
+    
+    win.hotkey_func(app, win.get_setting("hotkeys.autoclicker_toggle"), "Autoclicker", toggle_clicking)
+    
     # Show page
     app.show_page("autoclicker_page")
     
-# def keytyper(app):
-#     print("Hello world!")
+def keytyper(app):
+    frame = win.create_page(app, "keytyper_page", "Press + to type")
+    message = ""
+    
+    # Textbox for input
+    entry = tk.Text(frame, font=("Arial", 16), width=75, height=10) 
+    entry.pack(pady=10)
+
+    
+    def save_message():
+        nonlocal message
+        message = entry.get("1.0", tk.END).strip()  # Get all text from line 1, char 0 to the end
+        entry.delete("1.0", tk.END)  # Clear text box
+
+    
+    # Confirm button
+    confirm_btn = tk.Button(frame, text="Confirm message", font=("Arial", 14), command=save_message)
+    confirm_btn.pack(pady=10)
+    
+    def type_key():
+        keyboard.press('delete')
+        if message.strip():
+            keyboard.write(message)
+    
+    
+    win.hotkey_func(app, win.get_setting("hotkeys.keytyper"), "Keytyper", type_key)
+
+    # Show page
+    app.show_page("keytyper_page")

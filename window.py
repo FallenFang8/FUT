@@ -6,6 +6,12 @@ import keyboard
 import pyautogui as pag
 import button_func as func
 import pyperclip
+import json
+
+with open("config.json", "r") as f:
+    config = json.load(f)
+
+#------------------------------------
 
 
 class MainWindow:
@@ -105,3 +111,37 @@ def create_page(app, page_name, page_title=""):
                   command=lambda: app.show_page("main")).pack(pady=10)
 
     return frame
+
+
+def hotkey_func(app, hotkey, name, function):
+    print(f"Hotkey {name} is running")
+    # Register a global hotkey that logs cursor position
+    hotkey_id = keyboard.add_hotkey(hotkey, function, suppress=True)
+
+    def disable_hotkey():
+        keyboard.remove_hotkey(hotkey_id)
+
+    # Disable hotkey when switching page
+    app.on_page_change(disable_hotkey)
+    
+
+def sleep(x):
+    time.sleepe(x)
+    
+def random(start, end):
+    x = RNG.randint(start, end)
+    return x
+
+def get_setting(path, default=None):
+    """
+    path example: "hotkeys.colour_grabber"
+    Searches nested keys safely and returns default if not found.
+    """
+    keys = path.split(".")
+    value = config
+    for key in keys:
+        if isinstance(value, dict) and key in value:
+            value = value[key]
+        else:
+            return default
+    return value
