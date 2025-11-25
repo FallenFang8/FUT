@@ -3,15 +3,10 @@
         "colour_grabber": "+",
         "location_logger": "+",
         "autoclicker_toggle": "+",
-        "keytyper": "+"
+        "keytyper": "+",
+        "fullscreen_toggle": "F11"
     },
     "window": {
-        "fullscreen": true,
-        "topmost": false
-    },
-    "theme": {
-        "background_color": "#1e1e1e",
-        "text_color": "#ffffff",
-        "font": "Arial"
+        "fullscreen": false
     }
 }

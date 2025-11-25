@@ -17,12 +17,22 @@ with open("config.json", "r") as f:
 class MainWindow:
     def __init__(self, master):
         self.master = master
-        self.master.title("Dynamic Button App")
+        self.master.title("FUT - Fallen's Utility Toolkit")
 
-        # Fullscreen window
+        # Load fullscreen setting from config
+        self.fullscreen = get_setting("window.fullscreen", True)
+
         screen_width = master.winfo_screenwidth()
         screen_height = master.winfo_screenheight()
-        master.geometry(f"{screen_width}x{screen_height}+0+0")
+
+        if self.fullscreen:
+            master.geometry(f"{screen_width}x{screen_height}+0+0")
+            master.attributes("-fullscreen", True)
+            master.overrideredirect(True)
+        else:
+            master.geometry("1280x720")
+            master.attributes("-fullscreen", False)
+            master.overrideredirect(False)
 
         master.lift()
         master.attributes('-topmost', True)
@@ -34,6 +44,11 @@ class MainWindow:
         # Create main page
         self.create_page("main")
         self.show_page("main")
+
+
+        
+
+
 
     def create_page(self, page_name):
         """Create a new page/frame that fills the window."""
@@ -49,6 +64,7 @@ class MainWindow:
             frame.tkraise()
         else:
             print(f"No page named '{page_name}' exists.")
+    
 
     def add_button(self, button_name, action=None, page="main", width=20, height=2, font="Arial", font_size=12):
         """Add a button to a specific page."""
@@ -87,8 +103,51 @@ class MainWindow:
             tk.Label(frame, text=text, font=font).pack(pady=20)
         else:
             print(f"No page named '{page}' exists.")
+   
+############################################################################
+#                                                                          #
+#                        Toggle Fullscreen                                 #
+#                                                                          #
+############################################################################
+
+
+def toggle_fullscreen(app):
+    """Toggle fullscreen and save choice to config.json."""
+    app.fullscreen = not app.fullscreen  # flip the state
+
+    if app.fullscreen:
+        app.master.attributes("-fullscreen", True)
+        screen_width = app.master.winfo_screenwidth()
+        screen_height = app.master.winfo_screenheight()
+        app.master.geometry(f"{screen_width}x{screen_height}+0+0")
+    else:
+        app.master.attributes("-fullscreen", False)
+        app.master.geometry("1280x720")
+
+    # Save to config.json
+    if "window" not in config:
+        config["window"] = {}
+    config["window"]["fullscreen"] = app.fullscreen
+    with open("config.json", "w") as f:
+        json.dump(config, f, indent=4)
+
+
+def register_fullscreen_hotkey(app):
+    """Register hotkey to toggle fullscreen globally."""
+    def toggle():
+        toggle_fullscreen(app)
+
+    print(f"Hotkey Toggle Fullscreen is running")
+    # Register a global hotkey that logs cursor position
+    hotkey_id = keyboard.add_hotkey(get_setting("hotkeys.fullscreen_toggle"), toggle, suppress=True)
+
+
             
-            
+############################################################################
+#                                                                          #
+#                              Create page                                 #
+#                                                                          #
+############################################################################      
             
             
             
@@ -115,6 +174,12 @@ def create_page(app, page_name, page_title=""):
     return frame
 
 
+############################################################################
+#                                                                          #
+#                                  Hotkey                                  #
+#                                                                          #
+############################################################################
+
 def hotkey_func(app, hotkey, name, function):
     print(f"Hotkey {name} is running")
     # Register a global hotkey that logs cursor position
@@ -127,6 +192,12 @@ def hotkey_func(app, hotkey, name, function):
     app.on_page_change(disable_hotkey)
     
 
+
+############################################################################
+#                                                                          #
+#                                  Random                                  #
+#                                                                          #
+############################################################################
 def sleep(x):
     time.sleepe(x)
     
@@ -147,3 +218,6 @@ def get_setting(path, default=None):
         else:
             return default
     return value
+
+def exit_app(app):
+    app.master.destroy()

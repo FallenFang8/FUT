@@ -6,7 +6,15 @@ import keyboard
 import pyautogui as pag
 import window as win
 import pyperclip
+import json
 
+
+
+############################################################################
+#                                                                          #
+#                            Colour Grabber                                #
+#                                                                          #
+############################################################################
 
 def colour_grabber(app):
     # Creates the frame
@@ -37,6 +45,12 @@ def colour_grabber(app):
 
     # Show page
     app.show_page("colour_grabber_page")
+
+############################################################################
+#                                                                          #
+#                              Location Logger                             #
+#                                                                          #
+############################################################################
 
 def location_logger(app):
     frame = win.create_page(app, "location_logger_page", "Press + to log location")
@@ -69,7 +83,11 @@ def location_logger(app):
     #show page
     app.show_page("location_logger_page")    
     
-    
+############################################################################
+#                                                                          #
+#                               Autoclicker                                #
+#                                                                          #
+############################################################################
     
     
 def autoclicker(app):
@@ -96,6 +114,12 @@ def autoclicker(app):
     
     # Show page
     app.show_page("autoclicker_page")
+
+############################################################################
+#                                                                          #
+#                                  Keytyper                                #
+#                                                                          #
+############################################################################
     
 def keytyper(app):
     frame = win.create_page(app, "keytyper_page", "Press + to type")
@@ -126,22 +150,26 @@ def keytyper(app):
 
     # Show page
     app.show_page("keytyper_page")
-    
-def exit_app(app):
-    app.master.destroy()
+
 
 
 ############################################################################
 #                                                                          #
-#                                  Config                                  #
-#                                                                          #            
+#                                  Settings                                #
+#                                                                          #
 ############################################################################
-def edit_config(app):
-    frame = win.create_page(app, "edit_config_page", "Edit Configuration")
-    app.add_button("Hotkeys", action=hotkey_page, page="edit_config_page", width=20, height=2, font_size=20)
+def edit_settings(app):
+    frame = win.create_page(app, "edit_settings_page", "Edit Settings")
+    app.add_button("Hotkeys", action=hotkey_page, page="edit_settings_page", width=20, height=2, font_size=20)
+    app.add_button("Toggle Fullscreen",action=win.toggle_fullscreen, page="edit_settings_page",width=20,height=2,font_size=20
+)
+
+
     
-    
-    app.show_page("edit_config_page")
+    app.show_page("edit_settings_page")
+
+
+        
 
 def hotkey_page(app):
     # Create the page/frame
@@ -150,7 +178,7 @@ def hotkey_page(app):
     app.add_title("Edit Hotkeys", page="hotkey_config_page")
 
     back_btn = tk.Button(frame, text="Back", font=("Arial", 14),
-                     command=lambda: app.show_page("edit_config_page"))
+                     command=lambda: app.show_page("edit_settings_page"))
     back_btn.place(relx=0.5, rely=1.0, anchor="s", y=-30)
 
     app.show_page("hotkey_config_page")
