@@ -7,7 +7,9 @@ import pyautogui as pag
 import window as win
 import pyperclip
 import json
-
+import games
+with open("config.json", "r") as f:
+    config = json.load(f)
 
 
 ############################################################################
@@ -60,8 +62,8 @@ def location_logger(app):
     def copy_coords():
         pyperclip.copy(str(coords))
     
-    # Create a label to show grabbed color
-    coords_label = tk.Label(frame, text=f"coords: {coords}", font=("Arial", 16))
+    # Create a label 
+    coords_label = tk.Label(frame, text=f"coords: {coords}", font=("Arial", 16), wraplength=400)
     coords_label.pack(pady=10)
     
     copy_button = tk.Button(frame, text="Copy to clipboard", command=copy_coords)
@@ -75,6 +77,12 @@ def location_logger(app):
         rep += 1
         print(f"coords: {x, y}")
         coords_label.config(text=f"coords: {coords}")
+        
+    # Update wraplength dynamically on window resize
+    def update_wraplength(event):
+        coords_label.config(wraplength=frame.winfo_width() - 50)  # Subtract padding
+
+    frame.bind("<Configure>", update_wraplength)
     
     
     win.hotkey_func(app, win.get_setting("hotkeys.location_logger"), "Location Logger", log_location)
@@ -160,9 +168,8 @@ def keytyper(app):
 ############################################################################
 def edit_settings(app):
     frame = win.create_page(app, "edit_settings_page", "Edit Settings")
-    app.add_button("Hotkeys", action=hotkey_page, page="edit_settings_page", width=20, height=2, font_size=20)
-    app.add_button("Toggle Fullscreen",action=win.toggle_fullscreen, page="edit_settings_page",width=20,height=2,font_size=20
-)
+    app.add_button("Keybinds", action=hotkey_page, page="edit_settings_page", width=20, height=2, font_size=20)
+    app.add_button("Toggle Fullscreen",action=win.toggle_fullscreen, page="edit_settings_page",width=20,height=2,font_size=20)
 
 
     
@@ -173,12 +180,29 @@ def edit_settings(app):
 
 def hotkey_page(app):
     # Create the page/frame
-    frame = app.create_page("hotkey_config_page")
-    # Add a title if provided
-    app.add_title("Edit Hotkeys", page="hotkey_config_page")
+    frame = win.alt_create_page(app, "hotkey_config_page", "Edit Keybinds", back_page="edit_settings_page")
 
-    back_btn = tk.Button(frame, text="Back", font=("Arial", 14),
-                     command=lambda: app.show_page("edit_settings_page"))
-    back_btn.place(relx=0.5, rely=1.0, anchor="s", y=-30)
-
+    
+    app.add_button("Colour Grabber", action=lambda a: win.set_new_hotkey(a, "Colour Grabber", "hotkeys.colour_grabber"), page="hotkey_config_page", width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+    app.add_button("Location Logger", action=lambda a: win.set_new_hotkey(a, "Location Logger", "hotkeys.location_logger"), page="hotkey_config_page", width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+    app.add_button("Autoclicker Toggle", action=lambda a: win.set_new_hotkey(a, "Autoclicker Toggle", "hotkeys.autoclicker_toggle"), page="hotkey_config_page", width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+    app.add_button("Keytyper", action=lambda a: win.set_new_hotkey(a, "Keytyper", "hotkeys.keytyper"), page="hotkey_config_page", width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+    app.add_button("Fullscreen Toggle", action=lambda a: win.set_new_hotkey(a, "Fullscreen Toggle", "hotkeys.fullscreen_toggle"), page="hotkey_config_page", width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+    
+    
     app.show_page("hotkey_config_page")
+
+
+############################################################################
+#                                                                          #
+#                                  Games                                   #
+#                                                                          #
+############################################################################
+def game_dir(app):
+    frame = win.create_page(app, "games_page", "Games")
+    
+    #Buttons
+    app.add_button("Tic Tac Toe", action=games.tic_tac_toe, page="games_page", width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+    
+    
+    app.show_page("games_page")

@@ -9,7 +9,8 @@ import window as win
 import pyperclip
 from PIL import Image, ImageTk
 import json
-
+with open("config.json", "r") as f:
+    config = json.load(f)
 
 ############################################################################
 #                                                                          #
@@ -40,20 +41,17 @@ settings_btn.image = icon  # keep reference, otherwise icon disappears
 # Place in top-right
 settings_btn.place(relx=1.0, rely=0.0, anchor="ne", x=-10, y=10)
 
-
-
 ############################################################################
 #                                                                          #
 #                                Buttons                                   #
 #                                                                          #
 ############################################################################
 
-app.add_button("Settings", action=func.edit_settings, width=20, height=2, font_size=20)
-app.add_button("Colour Grabber", action=func.colour_grabber, width=20, height=2, font_size=20)
-app.add_button("Location Logger", action=func.location_logger, width=20, height=2, font_size=20)
-app.add_button("Autoclicker", action=func.autoclicker, width=20, height=2, font_size=20)
-app.add_button("Keytyper", action=func.keytyper, width=20, height=2, font_size=20)
-
+app.add_button("Games", action=func.game_dir, width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+app.add_button("Colour Grabber", action=func.colour_grabber, width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+app.add_button("Location Logger", action=func.location_logger, width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+app.add_button("Autoclicker", action=func.autoclicker, width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
+app.add_button("Keytyper", action=func.keytyper, width=config["main_buttons"]["width"], height=config["main_buttons"]["height"], font_size=config["main_buttons"]["font_size"])
 app.add_button("Exit", action=win.exit_app, width=5, height=1, font_size=15)
 # Register fullscreen hotkey
 win.register_fullscreen_hotkey(app)

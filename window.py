@@ -173,6 +173,28 @@ def create_page(app, page_name, page_title=""):
 
     return frame
 
+def alt_create_page(app, page_name, page_title="", back_page="main"):
+    """
+    Creates a new page in the app with basic setup:
+    - Adds a frame for the page
+    - Adds a title at the top
+    - Adds a 'Back' button to return to the any page
+    Returns the frame so you can add other widgets.
+    """
+    # Create the page/frame
+    frame = app.create_page(page_name)
+    # Add a title if provided
+    if page_title:
+        app.add_title(page_title, page=page_name)
+    # Add a back button (skip if this is the main page)
+    if page_name != "main":
+        back_btn = tk.Button(frame, text="Back", font=("Arial", 14),
+                     command=lambda: app.show_page(back_page))
+        back_btn.place(relx=0.5, rely=1.0, anchor="s", y=-30)
+
+
+    return frame
+
 
 ############################################################################
 #                                                                          #
@@ -191,7 +213,46 @@ def hotkey_func(app, hotkey, name, function):
     # Disable hotkey when switching page
     app.on_page_change(disable_hotkey)
     
+def set_new_hotkey(app, hotkey_display_name, new_hotkey):
+    # Create page
+    page_name = "set_hotkey_page_" + new_hotkey.replace('.', '_')
+    frame = alt_create_page(app, page_name, f"Set hotkey for {hotkey_display_name}", back_page="hotkey_config_page")
 
+    # Show current value
+    keys = new_hotkey.split('.')
+    cur = config
+    for k in keys:
+        cur = cur.get(k, None) if isinstance(cur, dict) else None
+    cur_label = tk.Label(frame, text=f"Current hotkey: {cur}")
+    cur_label.pack(pady=8)
+
+    instr = tk.Label(frame, text="Press a key now (Esc to cancel)...", font=("Arial", 12))
+    instr.pack(pady=6)
+
+    def save_key(key_name):
+        # set nested value in config
+        node = config
+        for k in keys[:-1]:
+            node = node.setdefault(k, {})
+        node[keys[-1]] = key_name
+        with open("config.json", "w") as f:
+            json.dump(config, f, indent=4)
+
+    def on_key(event):
+        # Use keysym for named keys (Escape, Shift_L, etc.)
+        key_name = event.keysym
+        if key_name == "Escape":
+            instr.config(text="Cancelled.")
+        else:
+            save_key(key_name)
+            instr.config(text=f"Saved new hotkey: {key_name}")
+        # stop listening after one key
+        frame.unbind_all("<Key>")
+
+    # Bind globally while this page is shown; one key press will register
+    frame.bind_all("<Key>", on_key)
+
+    app.show_page(page_name)
 
 ############################################################################
 #                                                                          #
@@ -207,7 +268,7 @@ def random(start, end):
 
 def get_setting(path, default=None):
     """
-    path example: "hotkeys.colour_grabber"
+    path example: get_setting("hotkeys.colour_grabber")
     Searches nested keys safely and returns default if not found.
     """
     keys = path.split(".")

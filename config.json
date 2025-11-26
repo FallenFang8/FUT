@@ -4,9 +4,15 @@
         "location_logger": "+",
         "autoclicker_toggle": "+",
         "keytyper": "+",
-        "fullscreen_toggle": "F11"
+        "fullscreen_toggle": "f11"
     },
     "window": {
-        "fullscreen": false
+        "fullscreen": true
+    },
+    "main_buttons": {
+        "font": "Arial",
+        "font_size": 20,
+        "width": 20,
+        "height": 2
     }
 }
