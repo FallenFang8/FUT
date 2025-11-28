@@ -7,7 +7,7 @@
         "fullscreen_toggle": "f11"
     },
     "window": {
-        "fullscreen": true
+        "fullscreen": false
     },
     "main_buttons": {
         "font": "Arial",
