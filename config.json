@@ -14,5 +14,9 @@
         "font_size": 20,
         "width": 20,
         "height": 2
+    },
+    "main_window": {
+        "title": "FUT - Fallen's Utility Toolkit",
+        "icon_path": "assets/FUT_icon.ico"
     }
 }

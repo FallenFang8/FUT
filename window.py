@@ -17,7 +17,8 @@ with open("config.json", "r") as f:
 class MainWindow:
     def __init__(self, master):
         self.master = master
-        self.master.title("FUT - Fallen's Utility Toolkit")
+        self.master.title(config["main_window"]["title"])
+        
 
         # Load fullscreen setting from config
         self.fullscreen = get_setting("window.fullscreen", True)
