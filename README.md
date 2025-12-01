@@ -21,3 +21,8 @@ Feel free to explore and modify the code to add more functionality or customize 
 ## Git tracking
 cd C:\Users\edu9174927\OneDrive - IKT Agder\Fag\VG2\IT2\FUT
 git add <filename>
+
+
+## BUGS
+autoclicker not stopping if active and exiting
+fullscreen deactivation not working properly
