@@ -115,7 +115,7 @@ def autoclicker(app):
     def run_autoclicker():
         if clicking:
             pag.click()
-            frame.after(10, run_autoclicker)  # Click every 10 ms
+            frame.after(0, run_autoclicker)  # Click every 10 ms
 
     
     win.hotkey_func(app, win.get_setting("hotkeys.autoclicker_toggle"), "Autoclicker", toggle_clicking)

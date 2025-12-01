@@ -17,6 +17,7 @@
     },
     "main_window": {
         "title": "FUT - Fallen's Utility Toolkit",
-        "icon_path": "assets/FUT_icon.ico"
+        "icon_path": "assets/FUT_icon.ico",
+        "non_fullscreen_size": "1280x720"
     }
 }

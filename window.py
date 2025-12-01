@@ -123,7 +123,7 @@ def toggle_fullscreen(app):
         app.master.geometry(f"{screen_width}x{screen_height}+0+0")
     else:
         app.master.attributes("-fullscreen", False)
-        app.master.geometry("1280x720")
+        app.master.geometry(config["mainwindow"]["non_fullscreen_size"])
 
     # Save to config.json
     if "window" not in config:
